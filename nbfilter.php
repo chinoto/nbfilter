@@ -288,7 +288,6 @@ while(ob_get_level()){ob_end_clean();} #Remove output buffers, we're not changin
 			border-spacing: 0;
 		}
 	</style>
-	<link rel='stylesheet' href='https://code.jquery.com/ui/1.11.4/themes/redmond/jquery-ui.css'/>
 
 	<style>
 		body {margin:1em;}
@@ -412,9 +411,9 @@ while(ob_get_level()){ob_end_clean();} #Remove output buffers, we're not changin
 	});
 	/**/
 	?>
-	<script src='https://code.jquery.com/jquery-2.x-git.js'></script>
-	<script src='https://code.jquery.com/ui/jquery-ui-git.js'></script>
-	<script src='/ext/jquery.mjs.nestedSortable.js'></script><?#https://github.com/ilikenwf/nestedSortable/blob/master/jquery.mjs.nestedSortable.js?>
+	<script src='ext/jquery.min.js'></script>
+	<script src='ext/jquery-ui.min.js'></script>
+	<script src='ext/jquery.mjs.nestedSortable.js'></script>
 	<script src='nbfilter.js'></script>
 	<?flush();?>
 	<script>//<![CDATA[

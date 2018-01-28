@@ -6,7 +6,7 @@ function nbfilter_init(data){
 		,templates=$('#templates')[0]
 		,tmpl_group=templates.querySelector('.filter_group')
 		,tmpl_cond =templates.querySelector('.filter_cond')
-		,v_funcs={ //This is only a pile of functions that are pulled into fields, it could be deleted right after field is assigned with no consequences
+		,v_funcs={ //This is only a pile of functions that are pulled into fields, it could be deleted right after fields is assigned with no consequences
 			input:function op_input(_elem,value,data){
 				var _input=document.createElement('input');
 				_input.value=value;
@@ -159,7 +159,7 @@ function nbfilter_init(data){
 			!fields[field]
 			||!fields[field][1][op]
 		){return;}
-		fields[field][1][op][1](_value,value,data[field]);
+		fields[field][1][op][1](_value,value||'',data[field]);
 	}
 
 	function read_group($group){
