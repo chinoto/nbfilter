@@ -65,7 +65,7 @@ function nbfilter_init(data){
 				contains:['Contains',v_funcs.input,v_funcs.read_single_input]
 			}]
 		};
-	
+
 	//populate_fields went from 17.25ms to 0.51ms just by creating the options manually!
 	(function populate_fields(){
 		var
@@ -80,7 +80,7 @@ function nbfilter_init(data){
 			//$field.append($('<option/>',{value:i,text:fields[i][0]}));
 		}
 	}());
-	
+
 	function create_group(group){
 		group=group||{};
 		var
@@ -99,14 +99,14 @@ function nbfilter_init(data){
 		}
 		return _group;
 	}
-	
+
 	function create_cond(cond){
 		var _cond=tmpl_cond.cloneNode(true);
 		change_field(_cond,cond.field);
 		change_op(_cond,cond.op,cond.value);
 		return _cond;
 	}
-	
+
 	function change_field(_cond,change_to,auto_single_op){
 		var
 			_field=_cond.querySelector('.field')
@@ -118,19 +118,19 @@ function nbfilter_init(data){
 			,last_op
 			,op_count=0
 			,opt;
-		
+
 		_op.disabled=true;
 		_op.textContent='';
 		if(change_to){_field.value=change_to;}
 		field=_field.value;
 		_cond.querySelector('.value').textContent='';
 		if(!fields[field]||!(ops=fields[field][1])){return;}
-		
+
 		opt=document.createElement('option');
 		opt.textContent='Select an operator'
 		opt.value='';
 		_op.appendChild(opt);
-		
+
 		for(i in ops){
 			opt=document.createElement('option');
 			opt.textContent=ops[i][0]
@@ -138,20 +138,20 @@ function nbfilter_init(data){
 			_op.appendChild(opt);
 			++op_count;
 		}
-		
+
 		_op.disabled=false;
 		if(auto_single_op&&(op_count===1)){
 			change_op(_cond,last_op);
 		}
 	}
-	
+
 	function change_op(_cond,change_to,value){
 		var
 			_op=_cond.querySelector('.operator')
 			,op
 			,field =_cond.querySelector('.field').value
 			,_value=_cond.querySelector('.value');
-		
+
 		_value.textContent='';
 		if(change_to){_op.value=op=change_to;}
 		else{op=_op.value;}
@@ -161,7 +161,7 @@ function nbfilter_init(data){
 		){return;}
 		fields[field][1][op][1](_value,value,data[field]);
 	}
-	
+
 	function read_group($group){
 		if($group.length!==1||!$group.is('.filter_group')){
 			throw new Error('Invalid group element');
@@ -172,7 +172,7 @@ function nbfilter_init(data){
 			,data:$group.find('>.data>*').map(read_group_data_each).get()
 		};
 	}
-	
+
 	function read_group_data_each(){
 		var
 			$this=$(this)
@@ -194,12 +194,12 @@ function nbfilter_init(data){
 		}
 		throw new Error("Groups and conditions are mutually exclusive");
 	}
-	
+
 	$filter_block
 		.on('change','.filter_cond .field',function(){change_field($(this).closest('.filter_cond')[0],null,true);})
 		.on('change','.filter_cond .operator',function(){change_op($(this).closest('.filter_cond')[0]);})
 		.on('click','.delete',function(){$(this).closest('.filter_group,.filter_cond').remove();});
-	
+
 	(function filter_block_fill(){
 		var _group=create_group(
 			{
@@ -229,10 +229,10 @@ function nbfilter_init(data){
 		//Remove delete button and movement handle
 		var _tools=_group.querySelector('.connector>*');
 		_tools.parentNode.removeChild(_tools);
-		
+
 		$filter_block[0].appendChild(_group);
 	}());
-	
+
 	setTimeout(()=>{
 		$filter_block.nestedSortable({
 			listType:'ul'
@@ -248,17 +248,17 @@ function nbfilter_init(data){
 			,protectRoot:true
 		});
 	},0);
-	
+
 	$('#add_group').click(()=>{
 		$filter_block.find('>.filter_group>.data').append(
 			create_group({type:'group',op:0,data:[{type:'cond'},{type:'cond'}]})
 		);
 	});
-	
+
 	$('#add_cond').click(()=>{
 		$filter_block.find('>.filter_group>.data').append(create_cond({}));
 	});
-	
+
 	$('#submit_filter').click(()=>{
 		$.post(
 			'?submit'
@@ -278,7 +278,7 @@ function nbfilter_init(data){
 			}
 		);
 	});
-	
+
 	window.read_root_group=()=>{
 		return read_group($filter_block.children('.filter_group'));
 	};

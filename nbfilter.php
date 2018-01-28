@@ -75,10 +75,10 @@ if(0){ #To help determine what needs to be normalized
 	by pipes, create a genres row if needed for each genre, and finally insert
 	the ids into games_genres.
 	CREATE TABLE game_genre (game_id INT(10) UNSIGNED NOT NULL, genre_id INT(10) UNSIGNED NOT NULL, PRIMARY KEY(game_id,genre_id)) ENGINE=MYISAM;
-	
+
 	Platform is the only referenced table
 	Rating should be normalized out
-	
+
 	Developer and Publisher should be normalized into their own tables... or
 	maybe one table that specifies whether a string is a developer and/or
 	publisher... screw it, two tables, easier.
@@ -90,7 +90,7 @@ if(0){ #Fill game_genre table and display a list so we can manually verify that 
 	$ins_genre=$db->prepare("INSERT genres (genre) VALUES (?);");
 	#A "failed insert" is probably faster than checking if the row already exists. INSERT IGNORE also works, but causes warnings if there is a conflict.
 	$ins_gage=$db->prepare("INSERT game_genre (game_id,genre_id) VALUES (?,?) ON DUPLICATE KEY UPDATE game_id=game_id;");
-	
+
 	$result_games=$db->query("SELECT id,genre FROM games WHERE genre!='';");
 	while($row_game=$result_games->fetch()){
 		foreach(array_filter(explode('|',$row_game[1])) as $genre){
@@ -146,16 +146,16 @@ function tc2s($cond){ #translate condition to SQL
 	global $fields,$db;
 	if(!isset($cond['type'])){throw new Exception("Condition is missing type");}
 	if($cond['type']==='group'){return tg2s($cond);}
-	
+
 	if($cond['type']!=='cond'){throw new Exception("Expected type to be 'cond', got ".json_encode($cond['type']));}
 	if(!isset($cond['field'],$cond['op'],$cond['value'])){throw new Exception("Condition is missing keys: ".json_encode($cond));}
 	if(!$cond['field']||!$cond['op']){return null;} #Incomplete condition, should we complain?
 	if(!isset($fields[$cond['field']][$cond['op']])){throw new Exception("No such field/op combination exists: {$cond['field']}/{$cond['op']}");}
-	
+
 	#This is for when things get a bit more complex or the operator code is only useful for one field/op combination
 	$field=$fields[$cond['field']][$cond['op']];
 	if(!is_string($field)&&is_callable($field)){return $field($cond);}
-	
+
 	switch($cond['op']){
 		case 'contains': return "{$field} LIKE ".$db->quote('%'.$cond['value'].'%');
 		case 'eq_str': return "{$field}=".$db->quote($cond['value']);
@@ -171,13 +171,13 @@ if(isset($_GET['submit'])){
 	$group=json_decode($input,1);
 	if(!$group){throw new Exception("Bad input: ".$input);}
 	header("Content-Type: application/json; charset=UTF-8");
-	
+
 	try{$where=tg2s($group);}
 	catch(Exception $e){
 		echo json_encode(['error'=>$e->getMessage()]);
 		throw $e; #Let the error handler log it.
 	}
-	
+
 	header("Where: ".json_encode($where));
 	$result=$db->query(
 		"SELECT
@@ -219,7 +219,7 @@ while(ob_get_level()){ob_end_clean();} #Remove output buffers, we're not changin
 <html xmlns='http://www.w3.org/1999/xhtml'>
 <head>
 	<title>Nested Boolean Filter | Videogame Example</title>
-	
+
 	<script>//<![CDATA[
 		'use strict';
 		window.console.warn=(function(warn){
@@ -228,7 +228,7 @@ while(ob_get_level()){ob_end_clean();} #Remove output buffers, we're not changin
 				window.alert('Javascript warning.');
 			};
 		}(window.console.warn));
-		
+
 		window.onerror=function(message, source, lineno, colno, error){
 			alert(
 				'Javascript Error!\n'
@@ -237,13 +237,13 @@ while(ob_get_level()){ob_end_clean();} #Remove output buffers, we're not changin
 			);
 		};
 	//]]></script>
-	
+
 	<style>
-		/* http://meyerweb.com/eric/tools/css/reset/ 
+		/* http://meyerweb.com/eric/tools/css/reset/
 		   v2.0 | 20110126
 		   License: none (public domain)
 		*/
-		
+
 		html, body, div, span, applet, object, iframe,
 		h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 		a, abbr, acronym, address, big, cite, code,
@@ -253,8 +253,8 @@ while(ob_get_level()){ob_end_clean();} #Remove output buffers, we're not changin
 		dl, dt, dd, ol, ul, li,
 		fieldset, form, label, legend,
 		table, caption, tbody, tfoot, thead, tr, th, td,
-		article, aside, canvas, details, embed, 
-		figure, figcaption, footer, header, hgroup, 
+		article, aside, canvas, details, embed,
+		figure, figcaption, footer, header, hgroup,
 		menu, nav, output, ruby, section, summary,
 		time, mark, audio, video {
 			margin: 0;
@@ -265,7 +265,7 @@ while(ob_get_level()){ob_end_clean();} #Remove output buffers, we're not changin
 			vertical-align: baseline;
 		}
 		/* HTML5 display-role reset for older browsers */
-		article, aside, details, figcaption, figure, 
+		article, aside, details, figcaption, figure,
 		footer, header, hgroup, menu, nav, section {
 			display: block;
 		}
@@ -289,7 +289,7 @@ while(ob_get_level()){ob_end_clean();} #Remove output buffers, we're not changin
 		}
 	</style>
 	<link rel='stylesheet' href='https://code.jquery.com/ui/1.11.4/themes/redmond/jquery-ui.css'/>
-	
+
 	<style>
 		body {margin:1em;}
 		h1,h2,h3,h4,h5,h6 {
@@ -302,7 +302,7 @@ while(ob_get_level()){ob_end_clean();} #Remove output buffers, we're not changin
 		h4 {font-size:1.41em;}
 		h5 {font-size:1.26em;}
 		h6 {font-size:1.12em;}
-		
+
 		#filter_block .filter_group  ,#filter_block .filter_cond>div   {display:table;}
 		#filter_block .filter_group>*,#filter_block .filter_cond>div>* {display:table-cell;}
 		#filter_block .filter_group {
@@ -319,15 +319,15 @@ while(ob_get_level()){ob_end_clean();} #Remove output buffers, we're not changin
 			padding:0.25em;
 		}
 		#filter_block .sortable_placeholder {
-			
+
 		}
-		
+
 		#result_list td {padding:0 0.5em;}
 	</style>
 </head>
 <body>
 	<h1>Nested Boolean Filter | Videogame Example</h1>
-	
+
 	<button id='add_group'>Add Group</button>
 	&#xa0; &#xa0;
 	<button id='add_cond'>Add Condition</button>
@@ -337,7 +337,7 @@ while(ob_get_level()){ob_end_clean();} #Remove output buffers, we're not changin
 	<table>
 		<tbody id='result_list'></tbody>
 	</table>
-	
+
 	<div id='templates' style='display:none;'>
 		<li class='filter_group'>
 			<span class='connector'>
@@ -370,7 +370,7 @@ while(ob_get_level()){ob_end_clean();} #Remove output buffers, we're not changin
 			<span class='value'></span>
 		</div></li>
 	</div>
-	
+
 	<?
 	flush();
 	$data=[
