@@ -195,7 +195,7 @@ if(isset($_GET['submit'])){
 			) ge ON (g.id=ge.game_id)
 			LEFT JOIN platforms p ON (g.Platform=p.id)
 		WHERE ".($where?:1)."
-		ORDER BY p.name;"
+		ORDER BY p.name, g.GameTitle;"
 	);
 	$columns=[];
 	for($i=0,$count=$result->columnCount(); $i<$count; ++$i){
