@@ -41,7 +41,7 @@ function esc_js($dirty,$flags=0){
 	return json_encode($dirty,JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP|$flags);
 }
 
-$db=new PDO('mysql:host=localhost;dbname=games;charset=utf8','root','',[
+$db=new PDO('mysql:host=database;dbname=games;charset=utf8','root','',[
 	PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION
 	,PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_NUM
 	,PDO::MYSQL_ATTR_INIT_COMMAND=>"SET SESSION time_zone='+00:00';"

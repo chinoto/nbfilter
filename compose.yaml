@@ -1,0 +1,15 @@
+services:
+  web:
+    image: "mchauvel/php-pdo-mysql"
+    volumes:
+      - .:/var/www/html
+    ports:
+      - 8080:80
+  database:
+    image: mariadb
+    restart: always
+    volumes:
+      - ./games.sql:/docker-entrypoint-initdb.d/games.sql:ro
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: true
+      MARIADB_DATABASE: games
